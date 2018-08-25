@@ -1,8 +1,10 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import YTSearch from 'youtube-api-search';
 
 import SearchBar from './components/search-bar';
+import VideoDetail from './components/video-detail';
 import VideoList from './components/video-list';
 
 const API_KEY = 'AIzaSyD9EWTG-IJDl4wXaBm_z7Pht7LrlNBTJ28';
@@ -12,25 +14,30 @@ class App extends Component {
     super(props);
 
     this.state = {
+      selectedVideo: null,
       videos: [],
     };
 
     YTSearch({ key: API_KEY, term: 'skyrim' }, (videos) => {
-      this.setState({ videos });
+      this.setState({
+        selectedVideo: videos[0],
+        videos,
+      });
     });
   }
 
-  // setVideos = (videos) => {
-  //   this.setState({ videos });
-  // }
+  onVideoSelect = (selectedVideo) => {
+    this.setState({ selectedVideo });
+  }
 
   render() {
-    const { videos } = this.state;
+    const { selectedVideo, videos } = this.state;
 
     return (
       <div>
         <SearchBar />
-        <VideoList videos={videos} />
+        <VideoDetail video={selectedVideo} />
+        <VideoList onVideoSelect={this.onVideoSelect} videos={videos} />
       </div>
     );
   }
