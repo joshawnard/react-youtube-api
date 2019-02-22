@@ -2,13 +2,13 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import YTSearch from 'youtube-api-search';
+import YTSearch from 'youtube-api-v3-search';
 
 import SearchBar from './components/search-bar';
 import VideoDetail from './components/video-detail';
 import VideoList from './components/video-list';
 
-const API_KEY = 'AIzaSyD9EWTG-IJDl4wXaBm_z7Pht7LrlNBTJ28';
+const API_KEY = 'AIzaSyBQau0d4ij46QzynxJeFdWRo5DvWv_dC-Y';
 
 class App extends Component {
   constructor(props) {
@@ -24,12 +24,20 @@ class App extends Component {
 
 
   videoSearch = (term) => {
-    YTSearch({ key: API_KEY, term }, (videos) => {
-      this.setState({
-        selectedVideo: videos[0],
-        videos,
-      });
-    });
+    YTSearch(
+      API_KEY,
+      {
+        q: term,
+        part: 'snippet',
+        type: 'video',
+      },
+      (response, videos) => {
+        this.setState({
+          selectedVideo: videos.items[0],
+          videos: videos.items,
+        });
+      }
+    );
   }
 
   onVideoSelect = (selectedVideo) => {
